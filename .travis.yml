@@ -1,0 +1,10 @@
+language: c
+compiler:
+  - gcc
+dist: xenial
+addons:
+  apt:
+    sources:
+      - github-git-lfs-xenial
+      - ppa:git-core/ppa
+            
