@@ -3,6 +3,19 @@
 #include <ctype.h>
 #include "dictionary.h"
 
+void free_hashtable(hashmap_t hashtable[])
+{
+    for(int i = 0; i < HASH_SIZE; i++)
+    {
+        hashmap_t hnode = hashtable[i];
+        while(hnode)
+        {
+            hashmap_t tmp = hnode;
+            hnode = hnode->next;
+            free(tmp);
+        }
+    }
+}
 
 int test_load()
 {
@@ -23,6 +36,7 @@ int test_load()
                 } 
             }
         }
+        free_hashtable(hashtable);
     }
     else
     {
@@ -67,8 +81,9 @@ int test_check_and_load()
         printf("%d\n", check_word(myword5, hashtable));
         printf("%d\n", check_word(myword6, hashtable));
         printf("%d\n", check_word(myword7, hashtable));
+        free_hashtable(hashtable);
     }
-
+    
     return 0;
 }
 
@@ -79,11 +94,12 @@ int test_checkwords()
 
     if(load_dictionary("wordlist.txt", hashtable))
     {
-        FILE* fp = fopen("test2.txt", "r");
+        FILE* fp = fopen("test3.txt", "r");
         int num_misspelled = check_words(fp, hashtable, misspelled);
         printf("%d misspelled\n", num_misspelled);
         for(int i = 0; i < num_misspelled;i++)
             printf("\t%s misspelled.\n", misspelled[i]);
+        free_hashtable(hashtable);
     }
     return 0;
 }

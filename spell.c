@@ -30,7 +30,7 @@ int hstrcmp(char* str1, char* str2)
     return len1 - len2;
 }
 
-int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[])
+int check_words(FILE* fp, hashmap_t hashtable[], char *misspelled[])
 {
     if(misspelled == NULL)
         return 0;
@@ -43,10 +43,10 @@ int check_words(FILE* fp, hashmap_t hashtable[], char * misspelled[])
         char *sptr = strtok(line, " ");
         while(sptr != NULL)
         {
-            printf("Checking %s\n", sptr);
+            //printf("Checking %s\n", sptr);
             if(check_word(sptr, hashtable) == false)
             {
-                char* addw = malloc(strlen(sptr));
+                char* addw = malloc(strlen(sptr) + 1);
                 strcpy(addw, sptr);
                 misspelled[num_misspelled++] = addw;
                 if(num_misspelled == 1000)
@@ -77,7 +77,7 @@ bool internal_check_word(hashmap_t hashtable[], char* mword)
         }
         else
         {
-            char* lword = malloc(strlen(mword));
+            char* lword = malloc(strlen(mword) + 1);
             strcpy(lword, mword); 
             for(int i = 0; i < strlen(lword); i++)
                 lword[i] = tolower(lword[i]);
@@ -123,7 +123,7 @@ bool check_word(const char* word, hashmap_t hashtable[])
         
         if(!word_found)
         {
-            char* lword = malloc(strlen(mword));
+            char* lword = malloc(strlen(mword) + 1);
             strcpy(lword, mword); 
             for(int i = 0; i < strlen(lword); i++)
                 lword[i] = tolower(lword[i]);
