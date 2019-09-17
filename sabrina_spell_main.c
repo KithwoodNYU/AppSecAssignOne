@@ -94,7 +94,7 @@ int test_checkwords()
 
     if(load_dictionary("wordlist.txt", hashtable))
     {
-        FILE* fp = fopen("test3.txt", "r");
+        FILE* fp = fopen("test2.txt", "r");
         int num_misspelled = check_words(fp, hashtable, misspelled);
         printf("%d misspelled\n", num_misspelled);
         for(int i = 0; i < num_misspelled;i++)

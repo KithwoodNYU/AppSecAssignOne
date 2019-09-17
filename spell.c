@@ -41,6 +41,8 @@ int check_words(FILE* fp, hashmap_t hashtable[], char *misspelled[])
     while((read=getline(&line, &len, fp)) != -1)
     {
         char *sptr = strtok(line, " ");
+        if(strlen(sptr) > 45) // word too big, it is not misspelled
+            continue;
         while(sptr != NULL)
         {
             //printf("Checking %s\n", sptr);
@@ -61,6 +63,11 @@ int check_words(FILE* fp, hashmap_t hashtable[], char *misspelled[])
 bool internal_check_word(hashmap_t hashtable[], char* mword)
 {
     bool word_found = false;
+    char* endstring;
+    long val = strtol(mword, &endstring, 10); 
+    if(val > 0 || strcmp(mword, endstring) != 0)
+        return true;
+
     int bkt = hash_function(mword);
     hashmap_t node = hashtable[bkt];
     
@@ -98,6 +105,9 @@ bool check_word(const char* word, hashmap_t hashtable[])
     if(word == NULL || hashtable == NULL)
         return false;
     size_t wlen = strlen(word);
+    if(wlen > 45) // word too big, it is not misspelled
+        return false;
+        
     int ncnt = 0;
     size_t nlen = wlen;
     while(ispunct(word[nlen-1]) || word[nlen-1] == '\n' || word[nlen -1] == '\r')
@@ -113,6 +123,7 @@ bool check_word(const char* word, hashmap_t hashtable[])
             scnt++;
         else
             break;
+    
     size_t newlen = wlen - ncnt - scnt;
     if(newlen > 0)
     {
