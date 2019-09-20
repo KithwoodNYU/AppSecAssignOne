@@ -199,14 +199,16 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[])
             memset(hnode->word, '\0', 46);
             strcpy(hnode->word, line);
             int bkt = hash_function(hnode->word);
-            if(hashtable[bkt] == NULL)
-                hashtable[bkt] = hnode;
-            else
+            if(bkt < HASH_SIZE)
             {
-                hnode->next = hashtable[bkt];
-                hashtable[bkt] = hnode;
+                if(hashtable[bkt] == NULL)
+                    hashtable[bkt] = hnode;
+                else
+                {
+                    hnode->next = hashtable[bkt];
+                    hashtable[bkt] = hnode;
+                }
             }
-
             line = NULL;
             read = 0;
             len = 0;
@@ -220,15 +222,18 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[])
 }
 
 /*  
-fuction check_word(string word, hashmap hashtable[])
+function check_word(string word, hashmap hashtable[])
 {
-    Remove punctuation from beginning and end of word.
     Set int bucket to the output of hash_function(word).
     Set hashmap_t cursor equal to hashmap[bucket].
     While cursor is not NULL:
         If word equals cursor->word:
             return True.
-        Else if lower_case(word) equals curosr->word:
+        Set curosr to cursor->next.
+    Set int bucket to the output of hash_function(word).
+    Set hashmap_t cursor equal to hashmap[bucket].
+    While cursor is  not NULL:
+        If lower_case(word) equals curosr->word:
             return True.
         Set curosr to cursor->next.
     return False.
@@ -260,6 +265,7 @@ function check_words(file fp, hashmap hashtable[], string misspelled[])
         Read the line.
         Split the line on spaces.
         For each word in line:
+            Remove punctuation from beginning and end of word.
             If not check_word(word):
                 Append word to misspelled.
                 Increment num_misspelled.
