@@ -87,27 +87,36 @@ int test_check_and_load()
     return 0;
 }
 
-int test_checkwords()
+int test_checkwords(char* filename)
 {
     hashmap_t hashtable[HASH_SIZE];
     char* misspelled[MAX_MISSPELLED];
 
     if(load_dictionary("wordlist.txt", hashtable))
     {
-        FILE* fp = fopen("test2.txt", "r");
+        printf("dict loaded\n");
+        FILE* fp = fopen(filename, "r");
         int num_misspelled = check_words(fp, hashtable, misspelled);
         printf("%d misspelled\n", num_misspelled);
         for(int i = 0; i < num_misspelled;i++)
             printf("\t%s misspelled.\n", misspelled[i]);
         free_hashtable(hashtable);
     }
+    else
+    {
+        printf("Dictionary not loaded.\n");
+    }
+    
     return 0;
 }
 
 int main(void)
 {   
     //test_check_and_load();
-    test_checkwords();
+    test_checkwords("test1.txt");
+    test_checkwords("test2.txt");
+    test_checkwords("test3.txt");
+    //test_checkwords("/usr/bin/vim.tiny");
     //printf("%d\n", strncmp("\nTruth", "Truth", 5));
     return 0;
 }
