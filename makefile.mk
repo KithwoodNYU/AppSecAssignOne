@@ -10,5 +10,11 @@ spell.o : spell.c
 dictionary.o : dictionary.c
 	cc -g -c dictionary.c
 
+testmain.o: test_main.c
+	cc -g -c test_main.c
+
+test : testmain.o spell.o dictionary.o
+	cc -g -o test_spell_check test_main.o spell.o dictionary.o
+	
 clean : 
 	rm spell_check sabrina_spell_main.o spell.o dictionary.o

@@ -19,7 +19,6 @@ int hstrcmp(char* str1, char* str2)
     {
         for(int i = 0; i < len1; i++)
         {
-            //printf("%c compared to %c\n", str1[i], str2[i]);
             if(str1[i] > str2[i])
                 return 1;
             else if (str1[i] < str2[i])
@@ -77,60 +76,44 @@ int check_words(FILE* fp, hashmap_t hashtable[], char *misspelled[])
     if(sz > MAX_FILE_SIZE)
         return 0;
 
-    //printf("File size: %ld", sz);
-
     int num_misspelled = 0;
-    ssize_t read = 0;
-    size_t len = MAX_FILE_SIZE;
-    char* line = NULL;
-    char buff[MAX_READ];
-    char* val = fgets(buff, MAX_READ + 1,fp);
-    if(val == NULL || strlen(val) == MAX_READ)
+    char* read;
+    char line[MAX_READ];
+    while((read=fgets(line, MAX_READ + 1, fp)) != NULL && num_misspelled < MAX_MISSPELLED)
     {
-        //char* addw = strip_punct(buff);
-        //if(addw != NULL)
-        //{
-            misspelled[num_misspelled++] = val;
-        //}
-    }
-    else
-    {
-        rewind(fp);
-    }
-    
-    while((read=getline(&line, &len, fp)) >= 0 && num_misspelled < MAX_MISSPELLED)
-    {
-        if(num_misspelled >= MAX_MISSPELLED)
-            break; 
-        if(len > MAX_READ)
-        {    
-           num_misspelled++;
-           continue;     
-        } 
-        else
+        char *sptr = strtok(line, " ");
+        while(sptr != NULL)
         {
-            char *sptr = strtok(line, " ");
-            while(sptr != NULL)
-            {
-                if(strlen(sptr) > LENGTH) // word too big, it is not misspelled
-                {   
-                    sptr = strtok(NULL, " ");
-                    continue;
-                }
-                //printf("Checking %s\n", sptr);
-                if(check_word(sptr, hashtable) == false)
+            if(strlen(sptr) > LENGTH) // word too big, it is? misspelled
+            {   
+                while((read = fgets(line, MAX_READ + 1, fp) != NULL && strlen(read) == MAX_READ))
                 {
-                    char* addw = strip_punct(sptr);
-                    if(addw != NULL)
-                    {
-                        misspelled[num_misspelled++] = addw;
-                    }
-                    if(num_misspelled >= MAX_MISSPELLED)
-                        break; 
+                    char* temp = sptr;
+                    sptr = realloc(sptr, strlen(temp) + strlen(read) + 1);
+                    sptr = strcat(sptr, temp);
+                    sptr = strcat(sptr, read);
                 }
-                //printf("get next token...\n");
-                sptr = strtok(NULL, " ");
+                if(read != NULL)
+                {
+                    char* temp = sptr;
+                    sptr = realloc(sptr, strlen(temp) + strlen(read) + 1);
+                    sptr = strcat(sptr, temp);
+                    sptr = strcat(sptr, read);
+                }
+                
+                misspelled[num_misspelled++] = sptr;
+                
+                break;
             }
+            if(check_word(sptr, hashtable) == false)
+            {
+                char* addw = strip_punct(sptr);
+                if(addw != NULL)
+                {
+                    misspelled[num_misspelled++] = addw;
+                }
+            }
+            sptr = strtok(NULL, " ");
         }
     }
 
@@ -187,56 +170,28 @@ bool check_word(const char* word, hashmap_t hashtable[])
     }
 
     char* mword = strip_punct(word); 
-    // size_t nlen = wlen;
-    // while(ispunct(word[nlen-1]) || word[nlen-1] == '\n' || word[nlen -1] == '\r')
-    // {
-    //     nlen--;
-    //     if(nlen == 0) // all punctuation
-    //         return true;
-    // }
-
-    // bool word_found = false;
-    // int scnt = 0;
-    // for(int i = 0; i < wlen; i++)
-    //     if(ispunct(word[i]))
-    //         scnt++;
-    //     else
-    //         break;
-    
-    // size_t newlen = nlen - scnt;
-    // if(newlen > 0)
-    // {
-    //     char* mword = malloc(newlen);
-    //     if(mword)
-    //     {
-    //         strncpy(mword, word + scnt, newlen);
-    //         mword[newlen] = '\0';
     bool word_found = false;
     if(mword != NULL)
     {
-            //mword is correct here after removing punctuation
-            word_found = internal_check_word(hashtable, mword);
-            
-            if(!word_found)
+        //mword is correct here after removing punctuation
+        word_found = internal_check_word(hashtable, mword);
+        
+        if(!word_found)
+        {
+            char* lword = malloc(strlen(mword) + 1);
+            if(lword)
             {
-                char* lword = malloc(strlen(mword) + 1);
-                if(lword)
-                {
-                    strcpy(lword, mword);
-                    lword[strlen(mword) + 1] = '\0'; 
-                    for(int i = 0; i < strlen(lword); i++)
-                        lword[i] = tolower(lword[i]);
-                    
-                    word_found = internal_check_word(hashtable, lword);
-                    //printf("word %s found of length: %ld\n", lword, strlen(lword));
-
-                    //printf("freeing lword\n");
-                    free(lword);
-                }
+                strcpy(lword, mword);
+                lword[strlen(mword) + 1] = '\0'; 
+                for(int i = 0; i < strlen(lword); i++)
+                    lword[i] = tolower(lword[i]);
+                
+                word_found = internal_check_word(hashtable, lword);
+                free(lword);
             }
-            //printf("freeing mword\n");
-            free(mword);
-        //}
+        }
+        free(mword);
+    
     }
 
     return word_found;
@@ -258,7 +213,6 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[])
     } 
 
     free_dictionary(hashtable);
-    //printf("freed dict\n");
     struct stat buffer;
     int         status;
 
@@ -266,7 +220,6 @@ bool load_dictionary(const char* dictionary_file, hashmap_t hashtable[])
     if(status == 0) {
         if(buffer.st_size > MAX_FILE_SIZE || !S_ISREG(buffer.st_mode))
         {
-            //printf("File size: %ld\n", buffer.st_size);
             return false;
         }
     }
