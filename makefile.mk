@@ -2,7 +2,7 @@
 CFLAGS=-Wall
 LIBS=-lcheck -lm -lrt -lpthread -lsubunit
 
-all: clean spell_check test
+all: spell_check test
 
 spell_check : main.o spell.o dictionary.o 
 	gcc -o spell_check sabrina_spell_main.o spell.o dictionary.o
