@@ -1,7 +1,7 @@
 language: c
 compiler:
   - gcc
-script: make -f makefile.mk
+script: make all -f makefile.mk
 dist: xenial
 addons:
   apt:

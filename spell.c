@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <string.h>
 #include <ctype.h>
+#include <math.h>
 #include "dictionary.h"
 
 int MAX_FILE_SIZE = 1024 * 1024 * 2;
