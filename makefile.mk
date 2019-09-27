@@ -21,6 +21,7 @@ testmain.o: test_main.c
 
 test : testmain.o spell.o dictionary.o
 	gcc -o test_spell_check test_main.o spell.o dictionary.o $(LIBS)
+	./test_spell_check
 	
 clean : 
 	rm spell_check sabrina_spell_main.o spell.o dictionary.o
