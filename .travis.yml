@@ -8,4 +8,7 @@ addons:
     sources:
       - github-git-lfs-xenial
       - ppa:git-core/ppa
+before_install:
+  - apt-get install check
+  
             
