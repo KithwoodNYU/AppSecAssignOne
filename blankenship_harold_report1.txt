@@ -35,7 +35,7 @@ is created for the word to be added to the end of the linked list that is in the
 the bucket.
 
 In order to run the program and test locally, I created a main function located in the sabrina_spell_main.c
-file included in the zip.
+file included in the repository.
 
 Once the dictionary is loaded, a file to check for spelling errors is passed to the check_words function
 along with the hashmap dictionary and an array for holding the misspelled words.  The check_words function
@@ -78,12 +78,182 @@ programming was completed, I ran valgrind and found the multiple cases of the fo
 ==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
 ==29233== 
 
-The output from this run of valgrind can be found in the valgrind_out1.txt file included in the zip file.
+The output from this run of valgrind can be found as follows:
+
+==29233== Memcheck, a memory error detector
+==29233== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==29233== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==29233== Command: ./spell_check
+==29233== 
+==29233== Invalid write of size 1
+==29233==    at 0x4C3106F: strcpy (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x401379: check_word (spell.c:127)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233==  Address 0x779b114 is 0 bytes after a block of size 4 alloc'd
+==29233==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x401362: check_word (spell.c:126)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233== 
+==29233== Invalid read of size 1
+==29233==    at 0x4C30F74: strlen (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x4013C2: check_word (spell.c:128)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233==  Address 0x779b114 is 0 bytes after a block of size 4 alloc'd
+==29233==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x401362: check_word (spell.c:126)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233== 
+==29233== Invalid read of size 1
+==29233==    at 0x4C30F74: strlen (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x401722: hash_function (in /home/hblankenship/Development/AppSecAssignOne/spell_check)
+==29233==    by 0x401072: internal_check_word (spell.c:64)
+==29233==    by 0x4013DA: check_word (spell.c:131)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233==  Address 0x779b114 is 0 bytes after a block of size 4 alloc'd
+==29233==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x401362: check_word (spell.c:126)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233== 
+==29233== Invalid read of size 1
+==29233==    at 0x4C30F74: strlen (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x4010B0: internal_check_word (spell.c:69)
+==29233==    by 0x4013DA: check_word (spell.c:131)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233==  Address 0x779b114 is 0 bytes after a block of size 4 alloc'd
+==29233==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x401362: check_word (spell.c:126)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233== 
+==29233== Invalid read of size 1
+==29233==    at 0x4C30F74: strlen (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x400E73: hstrcmp (spell.c:16)
+==29233==    by 0x4010D9: internal_check_word (spell.c:74)
+==29233==    by 0x4013DA: check_word (spell.c:131)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233==  Address 0x779b114 is 0 bytes after a block of size 4 alloc'd
+==29233==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x401362: check_word (spell.c:126)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233== 
+==29233== Invalid read of size 1
+==29233==    at 0x4C30F74: strlen (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x4010F2: internal_check_word (spell.c:80)
+==29233==    by 0x4013DA: check_word (spell.c:131)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233==  Address 0x779b114 is 0 bytes after a block of size 4 alloc'd
+==29233==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x401362: check_word (spell.c:126)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233== 
+==29233== Invalid read of size 1
+==29233==    at 0x4C31063: strcpy (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x401115: internal_check_word (spell.c:81)
+==29233==    by 0x4013DA: check_word (spell.c:131)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233==  Address 0x779b114 is 0 bytes after a block of size 4 alloc'd
+==29233==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x401362: check_word (spell.c:126)
+==29233==    by 0x400F93: check_words (spell.c:47)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233== 
+==29233== Invalid write of size 1
+==29233==    at 0x4C3106F: strcpy (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x400FC5: check_words (spell.c:50)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233==  Address 0x77a2008 is 0 bytes after a block of size 8 alloc'd
+==29233==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x400FAE: check_words (spell.c:49)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233== 
+==29233== Invalid read of size 1
+==29233==    at 0x4E88CC0: vfprintf (vfprintf.c:1632)
+==29233==    by 0x4E8F898: printf (printf.c:33)
+==29233==    by 0x400DF4: test_checkwords (sabrina_spell_main.c:101)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233==  Address 0x77a2008 is 0 bytes after a block of size 8 alloc'd
+==29233==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x400FAE: check_words (spell.c:49)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233== 
+==29233== 
+==29233== HEAP SUMMARY:
+==29233==     in use at exit: 14,776,854 bytes in 123,180 blocks
+==29233==   total heap usage: 248,968 allocs, 125,788 frees, 21,700,113 bytes allocated
+==29233== 
+==29233== LEAK SUMMARY:
+==29233==    definitely lost: 14,775,942 bytes in 123,177 blocks
+==29233==    indirectly lost: 0 bytes in 0 blocks
+==29233==      possibly lost: 360 bytes in 2 blocks
+==29233==    still reachable: 552 bytes in 1 blocks
+==29233==         suppressed: 0 bytes in 0 blocks
+==29233== Rerun with --leak-check=full to see details of leaked memory
+==29233== 
+==29233== For counts of detected and suppressed errors, rerun with: -v
+==29233== ERROR SUMMARY: 2193 errors from 9 contexts (suppressed: 0 from 0)
+
 These errors were the result of poorly allocated memory for the words (I was allocation strlen instead of
-strlen + 1).  Once this was corrected, I only had to run valgrind one more time (in valgrind_out2.txt) to
+strlen + 1).  Once this was corrected, I only had to run valgrind one more time to
 correct the issues within the functions (issues within my own main including memory I was not de-allocating
 I considered outside the scope of the project).  Given time, I will re-run this with --leak-check=full and
 attempt to fix those issues as well.
+
+Second run of valgrind:
+
+==34== Memcheck, a memory error detector
+==34== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==34== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==34== Command: ./spell_check
+==34==
+==34== error calling PR_SET_PTRACER, vgdb might block
+==34==
+==34== HEAP SUMMARY:
+==34==     in use at exit: 146 bytes in 5 blocks
+==34==   total heap usage: 123,208 allocs, 123,203 frees, 6,909,219 bytes allocated
+==34==
+==34== LEAK SUMMARY:
+==34==    definitely lost: 146 bytes in 5 blocks
+==34==    indirectly lost: 0 bytes in 0 blocks
+==34==      possibly lost: 0 bytes in 0 blocks
+==34==    still reachable: 0 bytes in 0 blocks
+==34==         suppressed: 0 bytes in 0 blocks
+==34== Rerun with --leak-check=full to see details of leaked memory
+==34==
+==34== For counts of detected and suppressed errors, rerun with: -v
+==34== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+One can also see in the above that, while there are no errors, there appears to be a memory leak.  This leak
+was associated with a malloc in the strip_punct function but I was unable to determine why it was considered again
+leak and, because all attempts to fix it resulted in worse results, I simply chose to note the issue and move on.
 
 I suspect strongly (well, I know), that the program will contain bugs.  Those include passing in a shorter
 array for the hashmap dictionary than the one expected and also passing in a shorter array for the
@@ -97,8 +267,8 @@ Week Three - It's a Little Fuzzy
 
 Finally, for the fuzzing part of the assignment, I managed, after having been away for business in 
 Amsterdam all of last week, to get the afl fuzzer set up and running with perhaps an hour to spare until 
-turn-in time.  After having let the fuzzer run for only 30 minutes, the results of the fuzzer are included
-in the zip file or this assignment.  Copy/paste from the output at 27 minutes, below:
+turn-in time.  After having let the fuzzer run for only 30 minutes I did a Copy/paste from the output at 
+27 minutes, below:
 
                       american fuzzy lop 1.96b (afl_test)
 
@@ -126,6 +296,7 @@ x        trim : 0.00%/2, 0.00%                        tqqqqqqqqqqqqqqqqqqqqqqq
 mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj             [cpu: 12%]
 
 Final results after 30 minutes:
+
 start_time     : 1569810233
 last_update    : 1569812047
 fuzzer_pid     : 182

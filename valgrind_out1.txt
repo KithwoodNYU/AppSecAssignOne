@@ -3,7 +3,6 @@
 ==29233== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
 ==29233== Command: ./spell_check
 ==29233== 
-Checking When
 ==29233== Invalid write of size 1
 ==29233==    at 0x4C3106F: strcpy (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
 ==29233==    by 0x401379: check_word (spell.c:127)
@@ -102,9 +101,6 @@ Checking When
 ==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
 ==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
 ==29233== 
-Checking in
-Checking the
-Checking scourpse
 ==29233== Invalid write of size 1
 ==29233==    at 0x4C3106F: strcpy (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
 ==29233==    by 0x400FC5: check_words (spell.c:50)
@@ -116,60 +112,6 @@ Checking scourpse
 ==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
 ==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
 ==29233== 
-Checking fo
-Checking human
-Checking events,
-Checking it
-Checking mbecome
-Checking necessary
-Checking for
-Checking one
-Checking nation
-Checking to
-Checking throw
-Checking off
-Checking the
-Checking bonds
-Checking of
-Checking oppression
-Checking of
-Checking another.
-
-Checking John
-Checking Denver
-Checking was
-Checking a
-Checking man,
-Checking a
-Checking real
-Checking man.
-
-Checking How
-Checking many
-Checking foxes
-Checking make
-Checking the
-Checking sound
-Checking of
-Checking a
-Checking fox?
-
-Checking Splat
-Checking goes
-Checking the
-Checking cat!
-Checking The
-Checking cat
-Checking goes
-Checking splat.
-Checking Splat.
-Checking Splat.
-Checking Splat.
-Checking What's
-Checking up
-Checking with
-Checking that?
-3 misspelled
 ==29233== Invalid read of size 1
 ==29233==    at 0x4E88CC0: vfprintf (vfprintf.c:1632)
 ==29233==    by 0x4E8F898: printf (printf.c:33)
@@ -181,9 +123,6 @@ Checking that?
 ==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
 ==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
 ==29233== 
-        scourpse misspelled.
-        fo misspelled.
-        mbecome misspelled.
 ==29233== 
 ==29233== HEAP SUMMARY:
 ==29233==     in use at exit: 14,776,854 bytes in 123,180 blocks
