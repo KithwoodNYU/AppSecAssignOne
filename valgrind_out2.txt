@@ -3,67 +3,6 @@
 ==30695== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
 ==30695== Command: ./spell_check
 ==30695== 
-Checking When
-Checking in
-Checking the
-Checking scourpse
-Checking fo
-Checking human
-Checking events,
-Checking it
-Checking mbecome
-Checking necessary
-Checking for
-Checking one
-Checking nation
-Checking to
-Checking throw
-Checking off
-Checking the
-Checking bonds
-Checking of
-Checking oppression
-Checking of
-Checking another.
-
-Checking John
-Checking Denver
-Checking was
-Checking a
-Checking man,
-Checking a
-Checking real
-Checking man.
-
-Checking How
-Checking many
-Checking foxes
-Checking make
-Checking the
-Checking sound
-Checking of
-Checking a
-Checking fox?
-
-Checking Splat
-Checking goes
-Checking the
-Checking cat!
-Checking The
-Checking cat
-Checking goes
-Checking splat.
-Checking Splat.
-Checking Splat.
-Checking Splat.
-Checking What's
-Checking up
-Checking with
-Checking that?
-3 misspelled
-        scourpse misspelled.
-        fo misspelled.
-        mbecome misspelled.
 ==30695== 
 ==30695== HEAP SUMMARY:
 ==30695==     in use at exit: 14,776,857 bytes in 123,180 blocks

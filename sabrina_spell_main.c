@@ -17,6 +17,13 @@ void free_hashtable(hashmap_t hashtable[])
     }
 }
 
+void free_misspelled(char* misspelled[])
+{
+    for(int i = 0; i < MAX_MISSPELLED; i++)
+        if(misspelled[i] == NULL)
+            free(misspelled[i]);
+}
+
 int test_load()
 {
     hashmap_t hashtable[HASH_SIZE];
@@ -91,16 +98,19 @@ int test_checkwords(char* filename)
 {
     hashmap_t hashtable[HASH_SIZE];
     char* misspelled[MAX_MISSPELLED];
-
+    for(int i = 0; i < MAX_MISSPELLED; i++)
+        misspelled[i] = NULL; //initialize
+        
     if(load_dictionary("wordlist.txt", hashtable))
     {
-        printf("dict loaded\n");
+        //printf("dict loaded\n");
         FILE* fp = fopen(filename, "r");
         int num_misspelled = check_words(fp, hashtable, misspelled);
         printf("%d misspelled\n", num_misspelled);
-        for(int i = 0; i < num_misspelled;i++)
-            printf("\t%s misspelled.\n", misspelled[i]);
+        //for(int i = 0; i < num_misspelled;i++)
+        //    printf("\t%s misspelled.\n", misspelled[i]);
         free_hashtable(hashtable);
+        free_misspelled(misspelled);
     }
     else
     {
@@ -110,12 +120,23 @@ int test_checkwords(char* filename)
     return 0;
 }
 
-int main(void)
+int main(int argc, char* argv[])
 {   
+    char* filename = "./afl_tests/test2.txt";
+    if(argc == 2 && argv != NULL)
+    {
+        filename = argv[1];
+    }
+    else
+    {
+        printf("Usage: spell_check <filename>\n");
+        return 0;
+    }
+    
     //test_check_and_load();
-    test_checkwords("test1.txt");
-    test_checkwords("test2.txt");
-    test_checkwords("test3.txt");
+    //test_checkwords("test1.txt");
+    test_checkwords(filename);
+    //test_checkwords("test3.txt");
     //test_checkwords("/usr/bin/vim.tiny");
     //printf("%d\n", strncmp("\nTruth", "Truth", 5));
     return 0;

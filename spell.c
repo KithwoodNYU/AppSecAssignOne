@@ -41,7 +41,7 @@ char* strip_punct(const char* word)
             return NULL;
     }
 
-    int scnt = 0;
+    size_t scnt = 0;
     for(int i = 0; i < strlen(word); i++)
         if(ispunct(word[i]))
             scnt++;
@@ -51,19 +51,18 @@ char* strip_punct(const char* word)
     size_t newlen = nlen - scnt;
     if(newlen > 0)
     {
-        char* mword = malloc(newlen);
+        char* mword = (char*)malloc(newlen + 1);
         if(mword)
         {
             strncpy(mword, word + scnt, newlen);
             mword[newlen] = '\0';
+
+            //printf("%s should be %s of len: %d\n", mword, word + scnt, newlen);
             return mword;
         }
     }
-    else
-    {
-        return NULL;
-    }
-    
+        
+    return NULL;
 }
 
 int check_words(FILE* fp, hashmap_t hashtable[], char *misspelled[])
@@ -80,7 +79,7 @@ int check_words(FILE* fp, hashmap_t hashtable[], char *misspelled[])
     int num_misspelled = 0;
     char* read;
     char line[MAX_READ];
-    while((read=fgets(line, MAX_READ + 1, fp)) != NULL && num_misspelled < MAX_MISSPELLED)
+    while((read=fgets(line, MAX_READ + 1, fp)) && num_misspelled < MAX_MISSPELLED)
     {
         char *sptr = strtok(line, " ");
         while(sptr != NULL)
@@ -183,7 +182,7 @@ bool check_word(const char* word, hashmap_t hashtable[])
             if(lword)
             {
                 strcpy(lword, mword);
-                lword[strlen(mword) + 1] = '\0'; 
+                lword[strlen(mword)] = '\0'; 
                 for(int i = 0; i < strlen(lword); i++)
                     lword[i] = tolower(lword[i]);
                 

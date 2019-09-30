@@ -2,3 +2,160 @@ Application Security Assignment One
 Harold L. Blankenship
 hlb325@nyu.edu
 
+link to repository: https://github.com/KithwoodNYU/AppSecAssignOne
+
+*Week One - Setup
+
+Because my background is in software development (I've been doing some sort or combination of development for 
+the last 26 years), I already had all the necessary tools installed including git and my preferred IDE, 
+Visual Studio Code.  Most of my development work prior to relatively recently was using the Windows OS but
+ever since Windows 10, I've been a huge fan of the WSL (Windows Subsystem for Linux).  Thus far, I have not
+found anything in these assignments that I cannot do with WSL.  Perhaps the only configuration for this
+week that required more than a few minutes was setting up ssh again and then learning about code signing;
+I've never actually used code-signing before and, to be honest, found it quite onerous.  So, while I 
+committed that way early on, I have quit using it.  I suspect, for purposes of this assignment, I will
+have to add it back in toward the end just so you can see that it is done.  As for the ssh, I usually
+let VS code do the dirty work; I have three separate github accounts I must cycle between.
+
+*Week Two - Frustration With Shoddy Requirements, Pseudocode, and Trial and Error Gradescope
+
+The time spent on this section ended up being ridiculously long.  The coding itself was relatively simple,
+even though it has been 25 years since I have touched the C language.  Retraining my brain to use makefiles
+took some doing and, though I have used Jenkins, Travis was new to me.  Also, the DevOps style of test driven 
+development is something that I had little experience with outside of my own toying around with it some years
+ago.  I have always written test functions to make sure the program performed as exepected but not using any
+sort of framework.
+
+The overview of how the program works is well-known to you as you gave the prototype functions and a ... 
+general... expectation of how the program should work.  Essentially, when the program is run, the software
+first opens the aspell created dictionary file and processes it, line by line, to get the words that will be
+used as the 'dictionary' for checking spelling.  These words are run through a hash function to find the 
+'bucket' in the hashmap array where the word should reside.  Once the bucket is determined, a new node
+is created for the word to be added to the end of the linked list that is in the array element indicated by
+the bucket.
+
+In order to run the program and test locally, I created a main function located in the sabrina_spell_main.c
+file included in the zip.
+
+Once the dictionary is loaded, a file to check for spelling errors is passed to the check_words function
+along with the hashmap dictionary and an array for holding the misspelled words.  The check_words function
+then parses each line in the file, tokenizes the words based on the space character, and then passes each
+token word to the check_word function.  If check_word indicates that the word is misspelled, the word is 
+added to the array of misspelled words.  Once the file has been fully processed, the check_words function
+returns the number of misspelled words found.
+
+The check_word function takes the word that is passed to it from the above check_words function and strips
+punctuation and checks to see if the word exists in the dictionary (passed to my own internal_check_word
+function).  If the word does not exist, it is first converted to lowercase, re-hashed (this is where the
+pseudocode is most wrong and I felt badly for the people who aren't experienced enough to have seen it
+right away - some people got around it by lowercasing the words in the dictionary), and then checked again
+to see if it exists in the dictionary.  If it does not then  it is considered 'misspelled' and the function 
+returns false indicated that the word was not found in the dictionary.
+
+While developing these functions, I wrote my own internal tests for each one.  I found during my testing
+that, for some reason, probably peculiar to my setup, the strcmp or strncmp functions were failing to 
+correctly indicate that a word was properly spelled.  For instance, Truth and Truth are the same word
+but when read from the input file, even though it was in the dictionary and hashed to the SAME bucket,
+the strcmp function would say they were different.  Because of that, I also wrote my own hstrcmp function
+which correctly indicated that the word Truth is the word Truth.  There are other functions that are also
+helper functions (internal_check_word and strip_punct).
+
+There were plenty of expectations when programming that were taken into account before I ran valgrind or 
+created any test cases using the check framework, including simple testing of input, checking for 'regular'
+files, and making sure the file sizes were not too large (though this was mostly gleaned from conversations
+students had regarding the small amount of resources available to the gradescope program).  Once the 
+programming was completed, I ran valgrind and found the multiple cases of the following:
+
+==29233== Invalid write of size 1
+==29233==    at 0x4C3106F: strcpy (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x400FC5: check_words (spell.c:50)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233==  Address 0x77a2008 is 0 bytes after a block of size 8 alloc'd
+==29233==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==29233==    by 0x400FAE: check_words (spell.c:49)
+==29233==    by 0x400DA9: test_checkwords (sabrina_spell_main.c:98)
+==29233==    by 0x400E41: main (sabrina_spell_main.c:110)
+==29233== 
+
+The output from this run of valgrind can be found in the valgrind_out1.txt file included in the zip file.
+These errors were the result of poorly allocated memory for the words (I was allocation strlen instead of
+strlen + 1).  Once this was corrected, I only had to run valgrind one more time (in valgrind_out2.txt) to
+correct the issues within the functions (issues within my own main including memory I was not de-allocating
+I considered outside the scope of the project).  Given time, I will re-run this with --leak-check=full and
+attempt to fix those issues as well.
+
+I suspect strongly (well, I know), that the program will contain bugs.  Those include passing in a shorter
+array for the hashmap dictionary than the one expected and also passing in a shorter array for the
+misspelled words.  I would normally use a form of exception catching to fix those issues.  Other bugs that
+I found while testing (that were not because of trial and error gradescope testing), include improperly
+allocating memory (as mentioned previously), and reading from a file with 'too large' lines (though this was
+decidedly partially a trial and error gradescope issue).  Also, I completely moved away from using the
+preferred getline function because of this in particular and so re-wrote that whole section.
+
+Week Three - It's a Little Fuzzy
+
+Finally, for the fuzzing part of the assignment, I managed, after having been away for business in 
+Amsterdam all of last week, to get the afl fuzzer set up and running with perhaps an hour to spare until 
+turn-in time.  After having let the fuzzer run for only 30 minutes, the results of the fuzzer are included
+in the zip file or this assignment.  Copy/paste from the output at 27 minutes, below:
+
+                      american fuzzy lop 1.96b (afl_test)
+
+lq process timing qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqwq overall results qqqqqk
+x        run time : 0 days, 0 hrs, 27 min, 11 sec      x  cycles done : 0      x
+x   last new path : 0 days, 0 hrs, 0 min, 0 sec        x  total paths : 144    x
+x last uniq crash : 0 days, 0 hrs, 15 min, 37 sec      x uniq crashes : 4      x
+x  last uniq hang : 0 days, 0 hrs, 0 min, 12 sec       x   uniq hangs : 4      x
+tq cycle progress qqqqqqqqqqqqqqqqqqqqwq map coverage qvqqqqqqqqqqqqqqqqqqqqqqqu
+x  now processing : 0 (0.00%)         x    map density : 325 (0.50%)           x
+x paths timed out : 0 (0.00%)         x count coverage : 2.16 bits/tuple       x
+tq stage progress qqqqqqqqqqqqqqqqqqqqnq findings in depth qqqqqqqqqqqqqqqqqqqqu
+x  now trying : havoc                 x favored paths : 1 (0.69%)              x
+x stage execs : 9853/16.0k (61.58%)   x  new edges on : 63 (43.75%)            x
+x total execs : 12.9k                 x total crashes : 4 (4 unique)           x
+x  exec speed : 16.10/sec (zzzz...)   x   total hangs : 12 (4 unique)          x
+tq fuzzing strategy yields qqqqqqqqqqqvqqqqqqqqqqqqqqqwq path geometry qqqqqqqqu
+x   bit flips : 14/88, 6/87, 6/85                     x    levels : 2          x
+x  byte flips : 0/11, 0/10, 0/8                       x   pending : 144        x
+x arithmetics : 13/613, 0/0, 0/0                      x  pend fav : 1          x
+x  known ints : 8/65, 11/280, 1/352                   x own finds : 143        x
+x  dictionary : 0/0, 0/0, 0/5                         x  imported : n/a        x
+x       havoc : 0/0, 0/0                              x  variable : 0          x
+x        trim : 0.00%/2, 0.00%                        tqqqqqqqqqqqqqqqqqqqqqqqqj
+mqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqj             [cpu: 12%]
+
+Final results after 30 minutes:
+start_time     : 1569810233
+last_update    : 1569812047
+fuzzer_pid     : 182
+cycles_done    : 0
+execs_done     : 15210
+execs_per_sec  : 10.83
+paths_total    : 150
+paths_favored  : 1
+paths_found    : 149
+paths_imported : 0
+max_depth      : 2
+cur_path       : 0
+pending_favs   : 1
+pending_total  : 150
+variable_paths : 0
+bitmap_cvg     : 0.50%
+unique_crashes : 5
+unique_hangs   : 4
+last_path      : 1569811992
+last_crash     : 1569811962
+last_hang      : 1569811852
+exec_timeout   : 120
+afl_banner     : afl_test
+afl_version    : 1.96b
+command_line   : afl-fuzz -i ./afl_tests -o ./afl_results ./afl_test @@
+
+Determining the necessary fixes for the AFL results requires interpreting the available data in the afl_results 
+directory included in this assignment's zip file.  Note that, given the aforementioned necessary travel for 
+business in the prior week, I was unable to explore the results in depth and correct them.  That said, it is 
+aparent that the afl-fuzz program is a useful tool, particularly for developers to evaluate their code prior
+to deploying it in a production environment.  That, along with valgrind, would be useful to remove any common
+errors and problems that may be exploited by attackers.
+
